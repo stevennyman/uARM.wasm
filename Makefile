@@ -1,6 +1,6 @@
-APP	= uARM
-CC	= gcc
-LD	= gcc
+APP	= uARM.html
+CC	= emcc
+LD	= emcc
 
 BUILD ?= debug
 
@@ -15,8 +15,20 @@ ifeq ($(BUILD), avr)
 endif
 
 ifeq ($(BUILD), debug)
-	CC_FLAGS	= -Wall -W -O0 -g -ggdb -ggdb3 -D_FILE_OFFSET_BITS=64 -D__USE_LARGEFILE64 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -DLCD_SUPPORT
-	LD_FLAGS	= -O0 -g -ggdb -ggdb3
+	CC_FLAGS	= -Os -s WASM=1 \
+  -s ALLOW_MEMORY_GROWTH=1 \
+  -s NO_EXIT_RUNTIME=1 #-Wall -W -O0 -g -ggdb -ggdb3 -D_FILE_OFFSET_BITS=64 -D__USE_LARGEFILE64 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -DLCD_SUPPORT
+	LD_FLAGS	= -Os -s WASM=1 \
+  -s ALLOW_MEMORY_GROWTH=1 \
+  -s NO_EXIT_RUNTIME=1 \
+  -s EMTERPRETIFY=1 \
+  -s EMTERPRETIFY_ASYNC=1 \
+  -s EMTERPRETIFY_WHITELIST='["_main","_socRun"]' \
+  --shell-file ./min-shell.html \
+  --preload-file jaunty.rel.v2
+#  --profiling-funcs \
+  -s ASSERTIONS=0
+   #-O0 -g -ggdb -ggdb3
 	EXTRA_OBJS	= main_pc.o
 endif
 
@@ -46,6 +58,9 @@ OBJS	= $(EXTRA_OBJS) rt.o math64.o CPU.o MMU.o cp14.o cp15.o mem.o RAM.o callout
 $(APP): $(OBJS)
 	$(LD) $(LDFLAGS) -o $(APP) $(OBJS)
 	$(EXTRA)
+
+remake:
+	rm uARM.html;make
 
 AVR:	$(APP)
 	sudo avrdude -V -p ATmega1284p -c avrisp2 -P usb -U flash:w:$(APP).hex:i

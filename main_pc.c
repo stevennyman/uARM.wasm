@@ -1,6 +1,5 @@
 #include "SoC.h"
 
-
 #include <sys/time.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -66,7 +65,6 @@ unsigned char* readFile(const char* name, UInt32* lenP){
 static int ctlCSeen = 0;
 
 static int readchar(void){
-
 	struct timeval tv;
 	fd_set set;
 	char c;
@@ -202,12 +200,13 @@ int main(int argc, char** argv){
 	FILE* root = NULL;
 	int gdbPort = 0;
 
-	if(argc != 3 && argc != 2){
+	/*if(argc != 3 && argc != 2){
 		fprintf(stderr,"usage: %s path_to_disk [gdbPort]\n", argv[0]);
 		return -1;
-	}
+	}*/
 
 	//setup the terminal
+	
 	{
 		int ret;
 
@@ -221,21 +220,20 @@ int main(int argc, char** argv){
 		if(ret) perror("cannot set term attrs");
 	}
 
-	root = fopen(argv[1], "r+b");
+	//root = fopen(argv[1], "r+b");
+	root = fopen("jaunty.rel.v2", "r+b");
 	if(!root){
 		fprintf(stderr,"Failed to open root device\n");
 		exit(-1);
 	}
 
 	if(argc >= 3) gdbPort = atoi(argv[2]);
-
 	socInit(&soc, socRamModeAlloc, NULL, readchar, writechar, rootOps, root);
 	signal(SIGINT, &ctl_cHandler);
 	socRun(&soc, gdbPort);
 
 	fclose(root);
 	tcsetattr(0, TCSANOW, &old);
-
 	return 0;
 }
 

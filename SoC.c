@@ -16,6 +16,7 @@
 #include "pxa255_DMA.h"
 #include "pxa255_DSP.h"
 #include "pxa255_LCD.h"
+#include <emscripten.h>
 #ifdef EMBEDDED
 	#include <avr/io.h>
 #endif
@@ -341,6 +342,11 @@ void socRun(SoC* soc, UInt32 gdbPort){
 		#endif
 
 		cpuCycle(&soc->cpu);
+		if(!(cycles & 0x1FFFFFUL)) {
+			// fprintf(stderr,"Sleep Started\n");
+			emscripten_sleep(1);
+			// fprintf(stderr,"Sleep\n");
+		}
 	}
 }
 

@@ -1,44 +1,37 @@
 # What's this?
-This is simple ARM emulator called uARM, implemented by Dmitry Grinberg.
-(http://dmitry.gr/index.php?r=05.Projects&proj=07.%20Linux%20on%208bit)
+This is simple ARM emulator called uARM, implemented by Dmitry Grinberg ([Website](http://dmitry.gr/index.php?r=05.Projects&proj=07.%20Linux%20on%208bit)).
 
-# How to compile
+Now it has been ported to run in browsers with WebAssembly.
 
-## get codes
+# Screenshot
+![Screenshot](screenshot.png)
 
-```
-$ git clone https://github.com/syuu1228/uARM.git
-```
+# How to compile it myself?
 
-## compile
-
-just run make.
+## Get codes
 
 ```
-$ make
-```
-Or, if your system installed BSD make, you'll need to run GNU make like this:
-```
-$ gmake
+$ git clone https://github.com/TonyLianLong/uARM.wasm
 ```
 
-You will get ./uARM as an executable binary.
+## Install Emscripten (emcc)
+See this: https://github.com/kripken/emscripten/wiki
 
-## uncompress image
+## Uncompress image
 
 ```
 $ bzcat jaunty.rel.v2.bz2 > jaunty.rel.v2
 ```
 
-## boot linux up.
+## Compile
 
 ```
-$ ./uARM jaunty.rel.v2
+$ make
 ```
 
-You will get shell prompt after 10 second.
+You will get uARM.html, uARM.data, and so on.
 
-## enjoy in the sandbox.
 
-You can terminate by using ```killall uARM``` on terminal.
-I don't know how to shutdown safely.
+## Boot linux up.
+
+Use the server.py provided and open http://localhost:8000/uARM.html in a modern browser that supports WebAssembly (Firefox 63.0 and Chrome 69.0 works).
