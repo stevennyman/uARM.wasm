@@ -1,0 +1,8 @@
+.DS_Store
+*.o
+jaunty.rel.v2
+uARM.data
+uARM.html
+uARM.js
+uARM.js.orig.js
+uARM.wasm
