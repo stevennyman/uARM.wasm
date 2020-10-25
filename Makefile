@@ -21,9 +21,7 @@ ifeq ($(BUILD), debug)
 	LD_FLAGS	= -Os -s WASM=1 \
   -s ALLOW_MEMORY_GROWTH=1 \
   -s NO_EXIT_RUNTIME=1 \
-  -s EMTERPRETIFY=1 \
-  -s EMTERPRETIFY_ASYNC=1 \
-  -s EMTERPRETIFY_WHITELIST='["_main","_socRun"]' \
+  -s ASYNCIFY \
   --shell-file ./min-shell.html \
   --preload-file jaunty.rel.v2
 #  --profiling-funcs \
